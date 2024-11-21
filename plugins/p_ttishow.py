@@ -160,24 +160,33 @@ async def re_enable_chat(bot, message):
 
 @Client.on_message(filters.command('stats') & filters.incoming)
 async def get_ststs(bot, message):
-    rju = await message.reply('Fetching stats..')
-    #users and chats
-    total_users = await db.total_users_count()
-    totl_chats = await db.total_chat_count()
-    #primary db
-    filesp = await Media.count_documents()
-    #secondary db
-    totalsec = await Media2.count_documents()
-    #primary
-    stats = await clientDB.command('dbStats')
-    used_dbSize = (stats['dataSize']/(1024*1024))+(stats['indexSize']/(1024*1024))
-    free_dbSize = 512-used_dbSize
-    #secondary
-    stats2 = await clientDB2.command('dbStats')
-    used_dbSize2 = (stats2['dataSize']/(1024*1024))+(stats2['indexSize']/(1024*1024))
-    free_dbSize2 = 512-used_dbSize2
-    await rju.edit(script.STATUS_TXT.format((int(filesp)+int(totalsec)), total_users, totl_chats, filesp, round(used_dbSize, 2), round(free_dbSize, 2), totalsec, round(used_dbSize2, 2), round(free_dbSize2, 2)))
-
+    if message.from_user.id in ADMINS:
+        rju = await message.reply('Fetching stats..')
+        #users and chats
+        total_users = await db.total_users_count()
+        totl_chats = await db.total_chat_count()
+        #primary db
+        filesp = await Media.count_documents()
+        #secondary db
+        totalsec = await Media2.count_documents()
+        #primary
+        stats = await clientDB.command('dbStats')
+        used_dbSize = (stats['dataSize']/(1024*1024))+(stats['indexSize']/(1024*1024))
+        free_dbSize = 512-used_dbSize
+        #secondary
+        stats2 = await clientDB2.command('dbStats')
+        used_dbSize2 = (stats2['dataSize']/(1024*1024))+(stats2['indexSize']/(1024*1024))
+        free_dbSize2 = 512-used_dbSize2
+        rju = await rju.edit(script.STATUS_TXT.format((int(filesp)+int(totalsec)), total_users, totl_chats, filesp, round(used_dbSize, 2), round(free_dbSize, 2), totalsec, round(used_dbSize2, 2), round(free_dbSize2, 2)))
+        await asyncio.sleep(20)
+        await hj.delete()
+        await message.delete()
+    else:
+        k = await message.reply_sticker('CAACAgUAAxkBAAEtLFNmvj6dfMtvFsUAAboaqknBJOKaKJ4AAmoSAAJSlWFVQHoJ2epyfuU1BA')        
+        await asyncio.sleep(10)
+        await k.delete()
+        await message.delete()
+        
 @Client.on_message(filters.command('invite') & filters.user(ADMINS))
 async def gen_invite(bot, message):
     if len(message.command) == 1:
