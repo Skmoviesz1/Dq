@@ -13,3 +13,4 @@ aiohttp
 shortzy
 pyshorteners
 aiofiles
+dnspython==2.3.0
