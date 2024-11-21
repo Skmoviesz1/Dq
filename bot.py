@@ -13,12 +13,16 @@ from database.ia_filterdb import Media, Media2, choose_mediaDB, db as clientDB
 from database.users_chats_db import db
 from info import SESSION, API_ID, API_HASH, BOT_TOKEN, LOG_STR, LOG_CHANNEL, SECONDDB_URI
 from utils import temp
+from pyrogram import utils as pyroutils
 from typing import Union, Optional, AsyncGenerator
 from pyrogram import types
 from Script import script 
 from datetime import date, datetime 
 import pytz
 from sample_info import tempDict
+
+pyroutils.MIN_CHAT_ID = -999999999999
+pyroutils.MIN_CHANNEL_ID = -100999999999999
 
 class Bot(Client):
 
